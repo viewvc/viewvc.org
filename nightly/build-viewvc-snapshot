@@ -16,17 +16,18 @@ class BuildError(Exception):
     return self.message
   
 
-def make_release(branch, export_dir, publish_dir, root_url, username, password):
-    
-  # Export the requested ViewVC source tree.
-  cmd = "svn export --quiet '%s/%s' %s " \
-        "--username '%s' --password '%s' --non-interactive --force" \
-        % (root_url, urllib.quote(branch), export_dir, username, password)
+def make_release(branch, export_dir, publish_dir, root_url):
+  # Fetch the branch archive from GitHub.
+  cmds = ["wget -O '%s/ARCHIVE.zip' '%s/archive/%s.zip'" % (export_dir, root_url, urllib.quote(branch)),
+          "unzip -d '%s/EXPLODED' '%s/ARCHIVE.zip'" % (export_dir, export_dir),
+          ]
+  cmd = ' && '.join(cmds)
   sys.stdout.write("Running: %s\n" % (cmd))
   os.system(cmd)
+  viewvc_dir = "%s/EXPLODED/viewvc-%s" % (export_dir, branch)
 
   # Get the version number from ViewVC itself.
-  sys.path.insert(0, os.path.join(export_dir, 'lib'))
+  sys.path.insert(0, os.path.join(viewvc_dir, 'lib'))
   try:
     import viewvc
   except ImportError:
@@ -45,16 +46,16 @@ def make_release(branch, export_dir, publish_dir, root_url, username, password):
   zip_name = distname + '.zip'
   curdir = os.getcwd()
   try:
-    os.chdir(os.path.join(export_dir, 'tools'))
+    os.chdir(os.path.join(viewvc_dir, 'tools'))
     os.system('./make-release %s %s' % (distname, branch))
   finally:
     os.chdir(curdir)
 
   # Finally, return the locations of the archive files we've built.
-  gzip_file = os.path.join(export_dir, 'tools', gzip_name)
+  gzip_file = os.path.join(viewvc_dir, 'tools', gzip_name)
   if not os.path.exists(gzip_file):
     gzip_file = None
-  zip_file = os.path.join(export_dir, 'tools', zip_name)
+  zip_file = os.path.join(viewvc_dir, 'tools', zip_name)
   if not os.path.exists(zip_file):
     zip_file = None
 
@@ -77,15 +78,14 @@ def make_release(branch, export_dir, publish_dir, root_url, username, password):
   return gzip_file and gzip_name or None, zip_file and zip_name or None
 
 
-def publish_releases(branches, publish_dir, root_url, username, password):
+def publish_releases(branches, publish_dir, root_url):
   new_index_contents = get_html_index_header()
   for branch in branches:
     sys.stdout.write("Beginning build for branch '%s'.\n" % (branch))
     export_dir = None
     try:
       export_dir = tempfile.mkdtemp("", "viewvc-nightly-")
-      gzip_file, zip_file = make_release(branch, export_dir, publish_dir,
-                                         root_url, username, password)
+      gzip_file, zip_file = make_release(branch, export_dir, publish_dir, root_url)
       new_index_contents = new_index_contents + """
 <p>Build of %s:</p>
 <ul>
@@ -185,9 +185,6 @@ file that name and links to them.
 
 Options:
    --help (-h, -?)  : Show this usage message
-   --username       : Username used for source export
-   --password       : Password used for source export
-   --root-url       : Alternative source repository root URL
 
 """ % (progname, progname))
   if errmsg:
@@ -196,24 +193,16 @@ Options:
 
 
 if __name__ == "__main__":
-  root_url = "http://viewvc.tigris.org/svn/viewvc"
-  username = password = ""
-  opts, args = getopt.getopt(sys.argv[1:], 'h?',
-                             ['help', 'username=', 'password=', 'root-url='])
+  root_url = "https://github.com/viewvc/viewvc"
+  opts, args = getopt.getopt(sys.argv[1:], 'h?', ['help'])
   for name, value in opts:
     if name == '-h' or name == '-?' or name == '--help':
       usage_and_exit()
-    elif name == '--username':
-      username = value
-    elif name == '--password':
-      password = value
-    elif name == '--root-url':
-      root_url = value
   argc = len(args)
   if argc < 2:
     usage_and_exit("Not enough arguments")
   try:
-    publish_releases(args[1:], args[0], root_url, username, password)
+    publish_releases(args[1:], args[0], root_url)
   except BuildError, e:
     sys.stderr.write(str(e) + "\n")
     sys.exit(1)
