@@ -18,7 +18,7 @@ class BuildError(Exception):
 
 def make_release(branch, export_dir, publish_dir, root_url):
   # Fetch the branch archive from GitHub.
-  cmds = ["wget -O '%s/ARCHIVE.zip' '%s/archive/%s.zip'" % (export_dir, root_url, urllib.quote(branch)),
+  cmds = ["wget -q -O '%s/ARCHIVE.zip' '%s/archive/%s.zip'" % (export_dir, root_url, urllib.quote(branch)),
           "unzip -d '%s/EXPLODED' '%s/ARCHIVE.zip'" % (export_dir, export_dir),
           ]
   cmd = ' && '.join(cmds)
