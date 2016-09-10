@@ -7,4 +7,4 @@ RedirectPermanent /url-reference.html http://viewvc.tigris.org/nonav/source/brow
 RedirectPermanent /license-1.html http://viewvc.tigris.org/nonav/source/browse/*checkout*/viewvc/trunk/LICENSE.html
 
 # Old locations for release tarballs.
-RedirectMatch "/([^/]+\.(tar\.gz|\.zip))$" http://viewvc.org/downloads/$1
+RedirectMatch "^/([^/]+\.(tar\.gz|zip))$" http://viewvc.org/downloads/$1
