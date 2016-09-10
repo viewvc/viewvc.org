@@ -146,6 +146,7 @@ def get_html_index_footer():
   return """
 </div> <!-- section-body -->
 </div> <!-- section -->
+</div> <!-- #content -->
 
 </body>
 </html>
