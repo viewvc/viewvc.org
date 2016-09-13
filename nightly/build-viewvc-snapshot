@@ -128,7 +128,6 @@ def get_html_index_header():
    <a href="../download.html">Download</a> |
    <a href="../contributing.html">Contributing</a> |
    <a href="../faq.html">FAQ</a> |
-   <a href="../contact.html">Contact</a> |
    <a href="../who.html">About</a>
 </p>
 </div>
