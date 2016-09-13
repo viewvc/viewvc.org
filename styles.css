@@ -109,6 +109,12 @@ blockquote {
 /*
  * CLASSES
  */
+.highlight {
+    background: #7f3;
+    border-radius: 0.5em;
+    text-align: center;
+    font-weight: bold;
+}
 .imagecaptionbox {
     display: inline-block;
     text-align: center;
