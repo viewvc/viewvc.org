@@ -2,9 +2,14 @@
 RedirectPermanent /upgrading.html http://viewvc.tigris.org/nonav/source/browse/*checkout*/viewvc/trunk/docs/upgrading-howto.html
 RedirectPermanent /template-authoring-guide.html http://viewvc.tigris.org/nonav/source/browse/*checkout*/viewvc/trunk/docs/template-authoring-guide.html
 RedirectPermanent /url-reference.html http://viewvc.tigris.org/nonav/source/browse/*checkout*/viewvc/trunk/docs/url-reference.html
+RedirectPermanent /security/index.html https://github.com/viewvc/viewvc/blob/master/SECURITY.md
+RedirectPermanent /security https://github.com/viewvc/viewvc/blob/master/SECURITY.md
+RedirectPermanent /contributing.html https://github.com/viewvc/viewvc/blob/master/HACKING.md
+RedirectPermanent /download.html http://viewvc.org/downloads/
 
 # The license-1.html file.
 RedirectPermanent /license-1.html http://viewvc.tigris.org/nonav/source/browse/*checkout*/viewvc/trunk/LICENSE.html
 
 # Old locations for release tarballs.
 RedirectMatch "^/([^/]+\.(tar\.gz|zip))$" http://viewvc.org/downloads/$1
+
