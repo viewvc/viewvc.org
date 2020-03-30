@@ -1,9 +1,10 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 
 import sys
 import os
+import re
 import time
-import urllib
+import urllib.request, urllib.parse, urllib.error
 import shutil
 import getopt
 import tempfile
@@ -16,9 +17,12 @@ class BuildError(Exception):
     return self.message
   
 
+_version_re = re.compile('__version__ = [\'"]([^\'"]+)[\'"]')
+ 
 def make_release(branch, export_dir, publish_dir, root_url):
   # Fetch the branch archive from GitHub.
-  cmds = ["wget -q -O '%s/ARCHIVE.zip' '%s/archive/%s.zip'" % (export_dir, root_url, urllib.quote(branch)),
+  cmds = ["wget -q -O '%s/ARCHIVE.zip' '%s/archive/%s.zip'"
+          % (export_dir, root_url, urllib.parse.quote(branch)),
           "unzip -d '%s/EXPLODED' '%s/ARCHIVE.zip'" % (export_dir, export_dir),
           ]
   cmd = ' && '.join(cmds)
@@ -27,15 +31,17 @@ def make_release(branch, export_dir, publish_dir, root_url):
   viewvc_dir = "%s/EXPLODED/viewvc-%s" % (export_dir, branch)
 
   # Get the version number from ViewVC itself.
-  sys.path.insert(0, os.path.join(viewvc_dir, 'lib'))
-  try:
-    import viewvc
-  except ImportError:
-    raise BuildError("Unable to import viewvc module; export failed?")
-  version = viewvc.__version__
-  del sys.modules['viewvc']
-  del viewvc
-  del sys.path[0]
+  with open(os.path.join(viewvc_dir, 'lib', 'viewvc.py'), 'r') as fp:
+    while True:
+      line = fp.readline()
+      if not line:
+        break
+      match = _version_re.search(line)
+      if match:
+        version = match.group(1)
+        break
+  if not version:
+    raise BuildError("Unable to find __version__ in viewvc module")
 
   # Now, use ViewVC tools to make the distribution archives.
   localtime = time.localtime()
@@ -92,8 +98,8 @@ def publish_releases(branches, publish_dir, root_url):
 <li><a href="%s">%s</a></li>
 <li><a href="%s">%s</a></li>
 </ul>
-""" % (branch, urllib.quote(gzip_file), gzip_file,
-       urllib.quote(zip_file), zip_file)
+""" % (branch, urllib.parse.quote(gzip_file), gzip_file,
+       urllib.parse.quote(zip_file), zip_file)
     finally:
       if export_dir:
         sys.stdout.write("Removing temporary directory '%s'.\n" % (export_dir))
@@ -182,6 +188,6 @@ if __name__ == "__main__":
     usage_and_exit("Not enough arguments")
   try:
     publish_releases(args[1:], args[0], root_url)
-  except BuildError, e:
+  except BuildError as e:
     sys.stderr.write(str(e) + "\n")
     sys.exit(1)
