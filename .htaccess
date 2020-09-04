@@ -1,15 +1,15 @@
 # Old documents.
-RedirectPermanent /upgrading.html http://viewvc.tigris.org/nonav/source/browse/*checkout*/viewvc/trunk/docs/upgrading-howto.html
-RedirectPermanent /template-authoring-guide.html http://viewvc.tigris.org/nonav/source/browse/*checkout*/viewvc/trunk/docs/template-authoring-guide.html
-RedirectPermanent /url-reference.html http://viewvc.tigris.org/nonav/source/browse/*checkout*/viewvc/trunk/docs/url-reference.html
-RedirectPermanent /security/index.html https://github.com/viewvc/viewvc/blob/master/SECURITY.md
-RedirectPermanent /security https://github.com/viewvc/viewvc/blob/master/SECURITY.md
-RedirectPermanent /contributing.html https://github.com/viewvc/viewvc/blob/master/HACKING.md
-RedirectPermanent /download.html http://viewvc.org/downloads/
+RedirectPermanent /upgrading.html                https://htmlpreview.github.io/?https://raw.githubusercontent.com/viewvc/viewvc/master/docs/upgrading-howto.html
+RedirectPermanent /template-authoring-guide.html https://htmlpreview.github.io/?https://raw.githubusercontent.com/viewvc/viewvc/master/docs/template-authoring-guide.html
+RedirectPermanent /url-reference.html            https://htmlpreview.github.io/?https://raw.githubusercontent.com/viewvc/viewvc/master/docs/url-reference.html
+RedirectPermanent /security/index.html           https://github.com/viewvc/viewvc/blob/master/notes/SECURITY.md
+RedirectPermanent /security                      https://github.com/viewvc/viewvc/blob/master/notes/SECURITY.md
+RedirectPermanent /contributing.html             https://github.com/viewvc/viewvc/blob/master/notes/HACKING.md
+RedirectPermanent /download.html                 http://viewvc.org/downloads/
 
 # The license-1.html file.
-RedirectPermanent /license-1.html http://viewvc.tigris.org/nonav/source/browse/*checkout*/viewvc/trunk/LICENSE.html
+RedirectPermanent /license-1.html                https://raw.githubusercontent.com/viewvc/viewvc/master/LICENSE
 
 # Old locations for release tarballs.
-RedirectMatch "^/([^/]+\.(tar\.gz|zip))$" http://viewvc.org/downloads/$1
+RedirectMatch "^/([^/]+\.(tar\.gz|zip))$"        http://viewvc.org/downloads/$1
 
